@@ -93,23 +93,34 @@ route.get("/",(req,res)=>{
 //     })
 // })
 
-route.post('/',async function(req,res) {
+route.post('/', async function(req, res) {
+    let clave_encriptada = await encrypt.hash(req.body.Contraseña, 10)
 
-    let clave_encriptada = await encrypt.hash(req.body.Contraseña,10)
-
-    let data = {
-        IdUsuario:req.params.IdUsuario,
-        NombreDeUsuario:req.body.NombreDeUsuario,
-        Contraseña:clave_encriptada,
-        IdCliente:req.body.IdCliente,
-        }
-        
-    let sql = 'Insert into usuario set ?';
-    conexion.query(sql, data, function(err,results){
-        if (err){
+    let nombreDeUsuario = req.body.NombreDeUsuario;
+    let sql = 'SELECT COUNT(*) AS count FROM usuario WHERE NombreDeUsuario = ?';
+    conexion.query(sql, nombreDeUsuario, function(err, results) {
+        if (err) {
             res.json(err.message)
-        }else{
-            res.json("Adicion realizada de manera exitosa")
+        } else {
+            if (results[0].count > 0) {
+                console.log("El Nombre de usuario ya existe");
+                res.json("El nombre de usuario ya existe")
+            } else {
+                let data = {
+                    IdUsuario: req.params.IdUsuario,
+                    NombreDeUsuario: nombreDeUsuario,
+                    Contraseña: clave_encriptada,
+                    IdCliente: req.body.IdCliente,
+                }
+                sql = 'INSERT INTO usuario SET ?';
+                conexion.query(sql, data, function(err, results) {
+                    if (err) {
+                        res.json(err.message)
+                    } else {
+                        res.json("Adición realizada de manera exitosa")
+                    }
+                })
+            }
         }
     })
 });

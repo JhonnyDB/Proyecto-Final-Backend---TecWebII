@@ -19,7 +19,7 @@ use SistemaVenta;
 -- -----------------------------------------------------
 CREATE TABLE categoria (
   IdCategoria INT ,
-  DescripcionCategoria VARCHAR(100) ,
+  DescripcionCategoria VARCHAR(50) ,
   PRIMARY KEY (IdCategoria))
 ;
 
@@ -27,14 +27,14 @@ CREATE TABLE categoria (
 -- -----------------------------------------------------
 CREATE TABLE cliente (
   IdCliente INT ,
-  NombreCliente VARCHAR(45) ,
-  ApellidoCliente VARCHAR(45) ,
+  NombreCliente VARCHAR(20) ,
+  ApellidoCliente VARCHAR(20) ,
   Direccion VARCHAR(100) ,
   FechaNacimiento DATE ,
   Celular INT ,
-  Email VARCHAR(100) ,
-  Pais VARCHAR(45) ,
-  Ciudad VARCHAR(45) ,
+  Email VARCHAR(30) ,
+  Pais VARCHAR(30) ,
+  Ciudad VARCHAR(30) ,
   PRIMARY KEY (IdCliente))
 ;
 
@@ -42,11 +42,12 @@ CREATE TABLE cliente (
 -- -----------------------------------------------------
 CREATE TABLE producto (
   IdProducto INT ,
-  NombreProducto VARCHAR(45) ,
-  Marca VARCHAR(45) ,
+  NombreProducto VARCHAR(30) ,
+  Marca VARCHAR(30) ,
   PrecioU FLOAT ,
   Stock INT ,
   IdCategoria INT ,
+  Imagen VARCHAR(255) ,
   PRIMARY KEY (IdProducto),
 
     FOREIGN KEY (IdCategoria)
@@ -56,16 +57,27 @@ CREATE TABLE producto (
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 CREATE TABLE usuario (
-  IdUsuario INT NOT NULL,
-  NombreDeUsuario VARCHAR(45) NULL DEFAULT NULL,
-  Contraseña VARCHAR(45) NULL DEFAULT NULL,
-  IdCliente INT NULL DEFAULT NULL,
+  IdUsuario INT auto_increment,
+  NombreDeUsuario VARCHAR(20) ,
+  Contraseña VARCHAR(70) ,
+  IdCliente INT ,
   PRIMARY KEY (IdUsuario),
 
     FOREIGN KEY (IdCliente)
     REFERENCES cliente (IdCliente))
 ;
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+CREATE TABLE detalle (
+  NumDetalle INT ,
+  Cantidad INT ,
+  PrecioUnitario FLOAT ,
+  IdProducto INT ,
+  PRIMARY KEY (NumDetalle),
 
+    FOREIGN KEY (IdProducto)
+    REFERENCES producto (IdProducto)
+);
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 CREATE TABLE pago (
@@ -73,32 +85,16 @@ CREATE TABLE pago (
   Fecha DATE ,
   ModoDePago ENUM('Transferencia', 'Pago QR', 'Tigo Money') ,
   IdUsuario INT ,
-  IdProducto INT ,
+  NumDetalle INT ,
   PRIMARY KEY (NumPago),
 
-    FOREIGN KEY (IdUsuario)
-    REFERENCES usuario (IdUsuario),
+    FOREIGN KEY (NumDetalle)
+    REFERENCES detalle (NumDetalle),
 
-    FOREIGN KEY (IdProducto)
-    REFERENCES producto (IdProducto))
+    FOREIGN KEY (IdUsuario)
+    REFERENCES usuario (IdUsuario))
 ;
 
--- -----------------------------------------------------
--- -----------------------------------------------------
-CREATE TABLE detalle (
-  NumDetalle INT ,
-  Cantidad INT ,
-  PrecioTotal FLOAT ,
-  IdProducto INT ,
-  NumPago INT ,
-  PRIMARY KEY (NumDetalle),
-
-    FOREIGN KEY (IdProducto)
-    REFERENCES producto (IdProducto),
-
-    FOREIGN KEY (NumPago)
-    REFERENCES pago (NumPago)
-);
 
 INSERT INTO `cliente` (`IdCliente`, `NombreCliente`, `ApellidoCliente`, `Direccion`, `FechaNacimiento`, `Celular`, `Email`, `Pais`, `Ciudad`) 
 VALUES ('1', 'Jhonny', 'Mamani Valda', 'Villa Salome', '2002-02-28', '12497321', 'jhonny@gmail.com', 'La Paz', 'El alto');
@@ -106,10 +102,6 @@ INSERT INTO `cliente` (`IdCliente`, `NombreCliente`, `ApellidoCliente`, `Direcci
 VALUES ('2', 'Jaqueline', 'Mamani Sirpa', 'Alto Pampahasi', '2002-10-11', '24187612', 'jaqueline@gmail.com', 'La Paz', 'Nuestra señora de La Paz');
 INSERT INTO `cliente` (`IdCliente`, `NombreCliente`, `ApellidoCliente`, `Direccion`, `FechaNacimiento`, `Celular`, `Email`, `Pais`, `Ciudad`) 
 VALUES ('3', 'Jhonatan', 'Guachalla Tintaya', 'Alto Pampahasi', '2002-03-28', '99473213', 'jhonatan@gmail.com', 'La Paz', 'El alto');
-INSERT INTO `cliente` (`IdCliente`, `NombreCliente`, `ApellidoCliente`, `Direccion`, `FechaNacimiento`, `Celular`, `Email`, `Pais`, `Ciudad`) 
-VALUES ('10', 'Jhonatan', 'Guachalla Tintaya', 'Alto Pampahasi', '2002-03-28', '99473213', 'jhonatan@gmail.com', 'La Paz', 'El alto');
-
-select * from cliente;
 
 INSERT INTO `usuario` (`IdUsuario`, `NombreDeUsuario`, `Contraseña`, `IdCliente`) VALUES (1, 'Mushu', '1234', 1);
 INSERT INTO `usuario` (`IdUsuario`, `NombreDeUsuario`, `Contraseña`, `IdCliente`) VALUES (2, 'Jaqui', '5678', 2);
@@ -124,26 +116,34 @@ INSERT INTO `categoria` (`IdCategoria`, `DescripcionCategoria`) VALUES (6, 'Mous
 INSERT INTO `categoria` (`IdCategoria`, `DescripcionCategoria`) VALUES (7, 'Memorias RAM');
 INSERT INTO `categoria` (`IdCategoria`, `DescripcionCategoria`) VALUES (8, 'Laptops Gamers');
 
-INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`) VALUES (1, 'LG 24 pulgadas', 'LG', 1800, 10, 1);
-INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`) VALUES (2, 'Mouse gamer', 'Altisimo', 250, 10, 2);
-INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`) VALUES (3, 'Mouse escritorio', 'Altisimo', 50, 10, 3);
-INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`) VALUES (4, 'Teclado', 'Red Dragon', 1400, 10, 4);
-INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`) VALUES (5, 'Tarjeta', 'ASUS', 1000, 10, 5);
-INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`) VALUES (6, 'MousePad', 'UwU', 100, 10, 6);
-INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`) VALUES (7, 'Memoria', 'Coursair', 500, 10, 7);
-INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`) VALUES (8, 'Laptop', 'MSI', 7000, 10, 8);
+INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`, `Imagen`) 
+VALUES (1, 'LG 24 pulgadas', 'LG', 1800, 50, 1, null);
+INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`, `Imagen`) 
+VALUES (2, 'Mouse gamer', 'Altisimo', 250, 50, 2, null);
+INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`, `Imagen`) 
+VALUES (3, 'Mouse escritorio', 'Altisimo', 50, 10, 3, null);
+INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`, `Imagen`)
+VALUES (4, 'Teclado', 'Red Dragon', 1400, 50, 4, null);
+INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`, `Imagen`) 
+VALUES (5, 'Tarjeta', 'ASUS', 1000, 50, 5, null);
+INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`, `Imagen`) 
+VALUES (6, 'MousePad', 'UwU', 100, 50, 6, null);
+INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`, `Imagen`) 
+VALUES (7, 'Memoria', 'Coursair', 500, 50, 7, null);
+INSERT INTO `producto` (`IdProducto`, `NombreProducto`, `Marca`, `PrecioU`, `Stock`, `IdCategoria`, `Imagen`) 
+VALUES (8, 'Laptop', 'MSI', 7000, 50, 8, null);
 
-INSERT INTO `pago` (`NumPago`, `Fecha`, `ModoDePago`, `IdUsuario`, `IdProducto`) VALUES (1, '2022-08-31', '1', 1, 1);
-INSERT INTO `pago` (`NumPago`, `Fecha`, `ModoDePago`, `IdUsuario`, `IdProducto`) VALUES (2, '2022-08-31', '2', 2, 2);
-INSERT INTO `pago` (`NumPago`, `Fecha`, `ModoDePago`, `IdUsuario`, `IdProducto`) VALUES (3, '2022-08-31', '3', 3, 3);
+INSERT INTO `detalle` (`NumDetalle`, `Cantidad`, `PrecioUnitario`, `IdProducto`) VALUES (1, '5', '1800', '1');
+INSERT INTO `detalle` (`NumDetalle`, `Cantidad`, `PrecioUnitario`, `IdProducto`) VALUES (2, '10', '250', '2');
+INSERT INTO `detalle` (`NumDetalle`, `Cantidad`, `PrecioUnitario`, `IdProducto`) VALUES (3, '15', '50', '3');
 
-INSERT INTO `detalle` (`NumDetalle`, `Cantidad`, `PrecioTotal`, `IdProducto`, `NumPago`) VALUES (1, '2', '1800', '1', '1');
-INSERT INTO `detalle` (`NumDetalle`, `Cantidad`, `PrecioTotal`, `IdProducto`, `NumPago`) VALUES (2, '5', '250', '2', '2');
-INSERT INTO `detalle` (`NumDetalle`, `Cantidad`, `PrecioTotal`, `IdProducto`, `NumPago`) VALUES (3, '4', '50', '3', '3');
+INSERT INTO `pago` (`NumPago`, `Fecha`, `ModoDePago`, `IdUsuario`, `NumDetalle`) VALUES (1, '2023-01-15', '1', 1, 1);
+INSERT INTO `pago` (`NumPago`, `Fecha`, `ModoDePago`, `IdUsuario`, `NumDetalle`) VALUES (2, '2023-02-15', '2', 2, 2);
+INSERT INTO `pago` (`NumPago`, `Fecha`, `ModoDePago`, `IdUsuario`, `NumDetalle`) VALUES (3, '2023-03-15', '3', 3, 3);
 
 -- REPORTE GENERAL
 
-select * from pago;
+select * from producto;
 
 use SistemaVenta;
 Select cliente.IdCliente, NombreCliente, ApellidoCliente, Direccion, Celular, Email, usuario.IdUsuario, NombreDeUsuario, pago.NumPago, 
@@ -151,8 +151,8 @@ Fecha, ModoDePago, producto.NombreProducto, PrecioU, detalle.Cantidad, (detalle.
 from cliente, usuario, pago, producto, detalle
 where cliente.IdCliente = usuario.IdCliente 
 and usuario.IdUsuario = pago.IdUsuario
-and pago.IdProducto = producto.IdProducto
-and pago.NumPago = detalle.NumPago;
+and pago.NumDetalle = detalle.NumDetalle
+and detalle.IdProducto = producto.IdProducto;
 
 -- REPORTE POR FECHAS
 
@@ -162,9 +162,9 @@ Fecha, ModoDePago, producto.NombreProducto, PrecioU, detalle.Cantidad, (detalle.
 from cliente, usuario, pago, producto, detalle
 where cliente.IdCliente = usuario.IdCliente 
 and usuario.IdUsuario = pago.IdUsuario
-and pago.IdProducto = producto.IdProducto
-and pago.Fecha between '2022-08-01' and '2022-08-31'
-and pago.NumPago = detalle.NumPago;
+and pago.NumDetalle = detalle.NumDetalle
+and pago.Fecha between '2023-01-01' and '2023-03-20'
+and detalle.IdProducto = producto.IdProducto;
 
 -- REPORTE Especifico de cliente
 
@@ -174,19 +174,14 @@ Fecha, ModoDePago, producto.NombreProducto, PrecioU, detalle.Cantidad, (detalle.
 from cliente, usuario, pago, producto, detalle
 where cliente.IdCliente = usuario.IdCliente 
 and usuario.IdUsuario = pago.IdUsuario
-and pago.IdProducto = producto.IdProducto
+and pago.NumDetalle = detalle.NumDetalle
 and cliente.IdCliente = 1
-and pago.NumPago = detalle.NumPago;
+and detalle.IdProducto = producto.IdProducto;
 
--- FACTURA
+select * from producto;
 
 use SistemaVenta;
-Select  cliente.IdCliente, usuario.IdUsuario, pago.Fecha, producto.NombreProducto, Marca, detalle.Cantidad, (detalle.Cantidad * producto.PrecioU) Monto
-from cliente, usuario, pago, producto, detalle
-where cliente.IdCliente = usuario.IdCliente 
-and usuario.IdUsuario = pago.IdUsuario
-and pago.IdProducto = producto.IdProducto
-and pago.NumPago = detalle.NumPago;
-
-
-select * from categoria
+SELECT producto.NombreProducto, detalle.Cantidad
+FROM producto, detalle
+WHERE detalle.IdProducto = producto.IdProducto
+ORDER BY detalle.Cantidad DESC;

@@ -35,9 +35,9 @@ route.post("/",(req,res)=>{
     let Fecha = req.body.Fecha;
     let ModoDePago = req.body.ModoDePago;
     let IdUsuario = req.body.IdUsuario;
-    let IdProducto = req.body.IdProducto;
+    let NumDetalle = req.body.NumDetalle;
     let sql = "call pppago (?, ?, ?, ?, ?)"
-    conexion.query (sql,[NumPago, Fecha, ModoDePago, IdUsuario , IdProducto], function(err, result){
+    conexion.query (sql,[NumPago, Fecha, ModoDePago, IdUsuario , NumDetalle], function(err, result){
         if (err){
             res.json(err.message)
         }else{
@@ -55,9 +55,9 @@ route.put("/:NumPago",(req,res)=>{
     let Fecha = req.body.Fecha;
     let ModoDePago = req.body.ModoDePago;
     let IdUsuario = req.body.IdUsuario;
-    let IdProducto = req.body.IdProducto;
+    let NumDetalle = req.body.NumDetalle;
     let sql = "call pppago (?, ?, ?, ?, ?)"
-    conexion.query (sql,[NumPago, Fecha, ModoDePago, IdUsuario , IdProducto], function(err, result){
+    conexion.query (sql,[NumPago, Fecha, ModoDePago, IdUsuario , NumDetalle], function(err, result){
         if (err){
             res.json(err.message)
         }else{

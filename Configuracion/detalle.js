@@ -32,10 +32,10 @@ route.get("/",(req,res)=>{
 route.post("/",(req,res)=>{
     let NumDetalle = 0; 
     let Cantidad = req.body.Cantidad;
-    let PrecioTotal = req.body.PrecioTotal; 
-    let NumPago = req.body.NumPago;
+    let PrecioUnitario = req.body.PrecioUnitario; 
+    let IdProducto = req.body.IdProducto;
     let sql = "call ppdetalle (?, ?, ?, ?)"
-    conexion.query (sql, [NumDetalle, Cantidad, PrecioTotal, NumPago], function(err, result){
+    conexion.query (sql, [NumDetalle, Cantidad, PrecioUnitario, IdProducto], function(err, result){
         if (err){
             res.json(err.message)
         }else{
@@ -51,10 +51,10 @@ route.post("/",(req,res)=>{
 route.put("/:NumDetalle",(req,res)=>{
     let NumDetalle = req.params.NumDetalle; 
     let Cantidad = req.body.Cantidad;
-    let PrecioTotal = req.body.PrecioTotal;
-    let NumPago = req.body.NumPago;
+    let PrecioUnitario = req.body.PrecioUnitario;
+    let IdProducto = req.body.IdProducto;
     let sql = "call ppdetalle (?, ?, ?, ?)"
-    conexion.query (sql, [NumDetalle, Cantidad, PrecioTotal, NumPago], function(err, result){
+    conexion.query (sql, [NumDetalle, Cantidad, PrecioUnitario, IdProducto], function(err, result){
         if (err){
             res.json(err.message)
         }else{
