@@ -9,7 +9,7 @@ const conexion = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '77438122',
-    database: 'SistemaVenta'
+    database: 'SistemaVenta2'
 })
 
 //------------------------------------------------------------------
@@ -20,7 +20,7 @@ conexion.connect(function(err) {
     if(err){
         throw err;
     }else{
-        console.log('Conexion exitosa con la base de datos SistemaVenta !!!');
+        console.log('Conexion exitosa con la base de datos SistemaVenta2 !!!');
     }
 });
 

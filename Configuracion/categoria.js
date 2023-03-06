@@ -29,18 +29,24 @@ route.get("/",(req,res)=>{
 //                                POST                 
 // -----------------------------------------------------------------
 
-route.post("/",(req,res)=>{
-    let IdCategoria = 0; 
+route.post("/", (req, res) => {
+    let IdCategoria = 0;
     let DescripcionCategoria = req.body.DescripcionCategoria;
-    let sql = "call ppcategoria (?, ?)"
-    conexion.query (sql, [IdCategoria, DescripcionCategoria], function(err, result){
-        if (err){
-            res.json(err.message)
-        }else{
-            res.json("Adicion realizada de manera exitosa")
+
+    if (!DescripcionCategoria) {
+        return res.status(400).json({ error: "El campo DescripcionCategoria es obligatorio" });
+    }
+
+    let sql = "call ppcategoria (?, ?)";
+    conexion.query(sql, [IdCategoria, DescripcionCategoria], function (err, result) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.json("Adición realizada de manera exitosa");
         }
-    })
-})
+    });
+});
+
 
 //------------------------------------------------------------------
 //                                PUT                 

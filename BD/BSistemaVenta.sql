@@ -178,7 +178,7 @@ and pago.NumDetalle = detalle.NumDetalle
 and cliente.IdCliente = 1
 and detalle.IdProducto = producto.IdProducto;
 
-select * from producto;
+select * from usuario;
 
 use SistemaVenta;
 SELECT producto.NombreProducto, detalle.Cantidad

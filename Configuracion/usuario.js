@@ -94,6 +94,11 @@ route.get("/",(req,res)=>{
 // })
 
 route.post('/', async function(req, res) {
+    if (!req.body.NombreDeUsuario || !req.body.Contraseña || !req.body.IdCliente) {
+        res.json("No se permiten campos vacíos");
+        return;
+    }
+
     let clave_encriptada = await encrypt.hash(req.body.Contraseña, 10)
 
     let nombreDeUsuario = req.body.NombreDeUsuario;
@@ -124,6 +129,7 @@ route.post('/', async function(req, res) {
         }
     })
 });
+
 
 //------------------------------------------------------------------
 //                                PUT                 

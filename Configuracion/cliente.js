@@ -30,8 +30,8 @@ route.get("/",(req,res)=>{
 //                                POST                 
 // -----------------------------------------------------------------
 
-route.post("/", (req,res)=>{
-    let IdCliente = 0; 
+route.post("/", (req, res) => {
+    let IdCliente = 0;
     let NombreCliente = req.body.NombreCliente;
     let ApellidoCliente = req.body.ApellidoCliente;
     let Direccion = req.body.Direccion;
@@ -40,15 +40,21 @@ route.post("/", (req,res)=>{
     let Email = req.body.Email;
     let Pais = req.body.Pais;
     let Ciudad = req.body.Ciudad;
-    let sql = "call ppcliente (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-    conexion.query (sql, [IdCliente, NombreCliente, ApellidoCliente, Direccion, FechaNacimiento, Celular, Email, Pais, Ciudad], function(err, results){
-        if (err){
-            res.json(err.message)
-        }else{
-            res.json("Adicion realizada de manera exitosa")
+    
+    if (!NombreCliente || !ApellidoCliente || !Direccion || !FechaNacimiento || !Celular || !Email || !Pais || !Ciudad) {
+        return res.status(400).json({ error: "Los campos NombreCliente, ApellidoCliente, Direccion, FechaNacimiento, Celular, Email, Pais y Ciudad son obligatorios" });
+    }
+
+    let sql = "call ppcliente (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    conexion.query(sql, [IdCliente, NombreCliente, ApellidoCliente, Direccion, FechaNacimiento, Celular, Email, Pais, Ciudad], function (err, results) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.json("Adición realizada de manera exitosa");
         }
-    })
-})
+    });
+});
+
 
 //------------------------------------------------------------------
 //                                PUT                 

@@ -44,7 +44,7 @@ route.get("/", (req, res) => {
                 Stock: producto.Stock,
                 IdCategoria: producto.IdCategoria,
                 Imagen: producto.Imagen,
-                UrlImagen: `http://127.0.0.1:5500/Imagenes/${producto.Imagen}`
+                UrlImagen: `../../Proyecto Final/Imagenes/${producto.Imagen}`
             };
         });
         res.json(productos);
@@ -63,16 +63,23 @@ route.post("/", upload.single('Imagen'), (req, res) => {
     let PrecioU = req.body.PrecioU;
     let Stock = req.body.Stock;
     let IdCategoria = req.body.IdCategoria;
-    let Imagen = req.file.filename;
+    let Imagen = req.file ? req.file.filename : null;
+
+    if (!NombreProducto || !Marca || !PrecioU || !Stock || !IdCategoria || !Imagen) {
+        return res.status(400).json({ error: "Los campos NombreProducto, Marca, PrecioU, Stock, IdCategoria y la imagen son obligatorios" });
+    }
+
     let sql = "CALL ppproducto (?, ?, ?, ?, ?, ?, ?)";
     conexion.query(sql, [IdProducto, NombreProducto, Marca, PrecioU, Stock, IdCategoria, Imagen], function(err, result){
         if (err){
-        res.json(err.message);
-    } else {
-        res.json("Adición realizada de manera exitosa");
+            res.status(500).json({ error: err.message });
+        } else {
+            res.json("Adición realizada de manera exitosa");
         }
     });
 });
+
+
 
 //------------------------------------------------------------------
 //                                PUT                 

@@ -30,21 +30,25 @@ route.get("/",(req,res)=>{
 //                                POST                 
 // -----------------------------------------------------------------
 
-route.post("/",(req,res)=>{
-    let NumPago = 0; 
+route.post("/", (req, res) => {
+    if (!req.body.Fecha || !req.body.ModoDePago || !req.body.IdUsuario) {
+        res.status(400).json("Todos los campos son obligatorios");
+        return;
+    }
+    let NumPago = 0;
     let Fecha = req.body.Fecha;
     let ModoDePago = req.body.ModoDePago;
     let IdUsuario = req.body.IdUsuario;
-    let NumDetalle = req.body.NumDetalle;
-    let sql = "call pppago (?, ?, ?, ?, ?)"
-    conexion.query (sql,[NumPago, Fecha, ModoDePago, IdUsuario , NumDetalle], function(err, result){
-        if (err){
-            res.json(err.message)
-        }else{
-            res.json("Adicion realizada de manera exitosa")
+    let sql = "CALL pppago (?, ?, ?, ?)";
+    conexion.query(sql, [NumPago, Fecha, ModoDePago, IdUsuario], function (err, result) {
+        if (err) {
+            res.json(err.message);
+        } else {
+        res.json("Adición realizada de manera exitosa");
         }
-    })
-})
+    });
+});
+
 
 //------------------------------------------------------------------
 //                                PUT                 
@@ -55,9 +59,8 @@ route.put("/:NumPago",(req,res)=>{
     let Fecha = req.body.Fecha;
     let ModoDePago = req.body.ModoDePago;
     let IdUsuario = req.body.IdUsuario;
-    let NumDetalle = req.body.NumDetalle;
-    let sql = "call pppago (?, ?, ?, ?, ?)"
-    conexion.query (sql,[NumPago, Fecha, ModoDePago, IdUsuario , NumDetalle], function(err, result){
+    let sql = "call pppago (?, ?, ?, ?)"
+    conexion.query (sql,[NumPago, Fecha, ModoDePago, IdUsuario], function(err, result){
         if (err){
             res.json(err.message)
         }else{

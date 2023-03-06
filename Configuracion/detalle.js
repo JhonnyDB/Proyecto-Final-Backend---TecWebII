@@ -29,20 +29,26 @@ route.get("/",(req,res)=>{
 //                                POST                 
 // -----------------------------------------------------------------
 
-route.post("/",(req,res)=>{
-    let NumDetalle = 0; 
+route.post("/", (req, res) => {
+    let NumDetalle = 0;
     let Cantidad = req.body.Cantidad;
-    let PrecioUnitario = req.body.PrecioUnitario; 
     let IdProducto = req.body.IdProducto;
-    let sql = "call ppdetalle (?, ?, ?, ?)"
-    conexion.query (sql, [NumDetalle, Cantidad, PrecioUnitario, IdProducto], function(err, result){
-        if (err){
-            res.json(err.message)
-        }else{
-            res.json("Adicion realizada de manera exitosa")
+    let NumPago = req.body.NumPago;
+
+    if (!Cantidad || !IdProducto || !NumPago) {
+        return res.status(400).json({ error: "Los campos Cantidad, IdProducto e NumPago son obligatorios" });
+    }
+
+    let sql = "call ppdetalle (?, ?, ?, ?)";
+    conexion.query(sql, [NumDetalle, Cantidad, IdProducto, NumPago], function (err, result) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.json("Adición realizada de manera exitosa");
         }
-    })
-})
+    });
+});
+
 
 //------------------------------------------------------------------
 //                                PUT                 
@@ -51,10 +57,10 @@ route.post("/",(req,res)=>{
 route.put("/:NumDetalle",(req,res)=>{
     let NumDetalle = req.params.NumDetalle; 
     let Cantidad = req.body.Cantidad;
-    let PrecioUnitario = req.body.PrecioUnitario;
     let IdProducto = req.body.IdProducto;
+    let NumPago = req.body.NumPago;
     let sql = "call ppdetalle (?, ?, ?, ?)"
-    conexion.query (sql, [NumDetalle, Cantidad, PrecioUnitario, IdProducto], function(err, result){
+    conexion.query (sql, [NumDetalle, Cantidad, IdProducto, NumPago], function(err, result){
         if (err){
             res.json(err.message)
         }else{
