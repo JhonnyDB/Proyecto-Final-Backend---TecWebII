@@ -103,28 +103,6 @@ end if;
 end //
 Delimiter //
 
--- 												PROCEDIMIENTO SP DETALLE
-
-Delimiter //
-Create procedure ppdetalle(
-  In pNumDetalle INT ,
-  In pCantidad INT ,
-  In pPrecioUnitario FLOAT ,
-  In pIdProducto INT 
-)
-Begin
-declare CodigoD int default 0;
-if pNumDetalle = 0 then
-	set CodigoD = (select ifnull(max(NumDetalle) ,0) +1 From detalle);
-    INSERT INTO detalle (NumDetalle, Cantidad, PrecioUnitario, IdProducto) 
-	VALUES (CodigoD, pCantidad, pPrecioUnitario, pIdProducto);
-else
-	Update detalle Set Cantidad = pCantidad, PrecioUnitario = pPrecioUnitario, IdProducto = pIdProducto
-    where NumDetalle = pNumDetalle;
-end if;
-end //
-Delimiter //
-
 -- 												PROCEDIMIENTO SP PAGO
 
 Delimiter //
@@ -132,26 +110,49 @@ Create procedure pppago(
   In pNumPago INT ,
   In pFecha DATE ,
   In pModoDePago ENUM('Transferencia', 'Pago QR', 'Tigo Money') ,
-  In pIdUsuario INT ,
-  In pNumDetalle INT 
+  In pIdUsuario INT 
 )
 Begin
 declare CodigoPa int default 0;
 if pNumPago = 0 then
 	set CodigoPa = (select ifnull(max(NumPago) ,0) +1 From pago);
-    INSERT INTO pago (NumPago, Fecha, ModoDePago, IdUsuario, NumDetalle) 
-	VALUES (CodigoPa, pFecha, pModoDePago, pIdUsuario, pNumDetalle);
+    INSERT INTO pago (NumPago, Fecha, ModoDePago, IdUsuario) 
+	VALUES (CodigoPa, pFecha, pModoDePago, pIdUsuario);
 else
-	Update pago Set Fecha = pFecha, ModoDePago = pModoDePago, IdUsuario = pIdUsuario, NumDetalle = pNumDetalle
+	Update pago Set Fecha = pFecha, ModoDePago = pModoDePago, IdUsuario = pIdUsuario
     where NumPago = pNumPago;
 end if;
 end //
 Delimiter //
 
+-- 												PROCEDIMIENTO SP DETALLE
+
+Delimiter //
+Create procedure ppdetalle(
+  In pNumDetalle INT ,
+  In pCantidad INT ,
+  In pIdProducto INT ,
+  In pNumPago INT
+)
+Begin
+declare CodigoD int default 0;
+if pNumDetalle = 0 then
+	set CodigoD = (select ifnull(max(NumDetalle) ,0) +1 From detalle);
+    INSERT INTO detalle (NumDetalle, Cantidad, IdProducto, NumPago) 
+	VALUES (CodigoD, pCantidad, pIdProducto, pNumPago);
+else
+	Update detalle Set Cantidad = pCantidad, IdProducto = pIdProducto, NumPago = pNumPago
+    where NumDetalle = pNumDetalle;
+end if;
+end //
+Delimiter //
+
+
+
 call ppcliente ('0', 'Dery', 'Andres del Villar', 'Don Bosco', '2002-02-15', '21478932', 'deryandres@gmail.com', 'La Paz', 'El alto');
-call ppusuario ( 0, 'DAndres111', '8765', 4);
+call ppusuario ( 0, 'Andres', '123', 4);
 call ppcategoria (0, 'Memorias USB');
 call ppproducto (0, 'Memoria USB 8GB', 'HP', 45, 10, 9, null);
-call ppdetalle (0, '20', '1800', '1');
-call pppago (0, '2022-09-22', 1, 4, 4);
+call pppago (0, '2023-04-15', 1, 4);
+call ppdetalle (0, '10','4', '4');
 
